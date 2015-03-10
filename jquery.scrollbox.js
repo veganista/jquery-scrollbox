@@ -63,6 +63,22 @@ $.fn.scrollbox = function(config) {
       config.switchAmount = containerUL.children().length;
     }
 
+    // check if the lastItem check is needed
+    if ( config.infiniteLoop === true && containerUL.outerHeight() > container.outerHeight()) {
+        var children = $.makeArray(containerUL.children()),
+            lastItem = children.pop(),
+            height = 0;
+
+        children.forEach(function(item){
+            height += $(item).outerHeight(true);
+        });
+
+        // check if part of the lastItem is outside of the conatiner
+        if (height < container.outerHeight() && ($(lastItem).outerHeight(true) + height) > container.outerHeight()) {
+            containerUL.append(containerUL.children().clone());
+        }
+    }
+
     scrollForward = function() {
       if (paused) {
         return;
